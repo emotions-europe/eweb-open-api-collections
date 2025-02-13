@@ -291,23 +291,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorModel"
   /api/emotions/picklists/pack:
-    patch:
+    post:
       tags:
         - Pack
       summary: Packs the order, books the consignment and print carrierlabel for a picklist on specified printer
-      parameters:
-        - name: picklistId
-          in: query
-          description: ""
-          style: form
-          schema:
-            type: string
-        - name: printerNode
-          in: query
-          description: ""
-          style: form
-          schema:
-            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                printerNode:
+                  type: string
+                  description: Site physical identifier.
+                articleItemIds:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      articleItemId:
+                        type: string
+                      quantityToPack:
+                        type: integer
       responses:
         "200":
           description: Success
@@ -594,7 +600,7 @@ components:
           pickListId:
             type: integer
             format: int32
-          orderStatus:
+          pickListStatus:
             type: integer
             format: string
           pickLines:
