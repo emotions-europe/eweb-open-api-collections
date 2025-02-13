@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: |
-    Examples and description on how to use a pull based approach for integrating with e-web
+    Sample integrations for Pull Approach
   version: "1.0"
 
 tags:
@@ -17,15 +17,8 @@ tags:
 
       ![Workflow Diagram](./examples/pull_approach_examples/images/pack-eseal.drawio.svg)
 
-      1. Operator start by scanning some reference to get a picklist
-      1.1 Depending on process here but a typical way is that operator once scan the picking cart then just between each order only the order location within the picking cart is scanned.
-      2. e-web displays information on selected order
-      3. Operator put the order into the machine.
-      4. Operator press start to run the pack cycle.
-      5. Package is created and pass label applicator for label print.
-
 paths:
-  /api/emotions/picklists:
+  /picklists:
     get:
       tags:
         - Pack
@@ -62,7 +55,7 @@ paths:
             text/json:
               schema:
                 $ref: "#/components/schemas/ErrorModel"
-  /api/emotions/picklists/{picklistId}/pick-list-status:
+  /picklists/{picklistId}/pick-list-status:
     patch:
       tags:
         - Pick
@@ -71,7 +64,7 @@ paths:
       description: |
         **Optional**
 
-        This can be used to inform WMS that a picklist need to be put aside and error handled.
+        This can be used to inform Host that a picklist need to be put aside and error handled.
       parameters:
         - name: picklistId
           in: path
@@ -108,7 +101,7 @@ paths:
             text/json:
               schema:
                 $ref: "#/components/schemas/ErrorModel"
-  /api/emotions/picklines/{picklineId}:
+  /picklines/{picklineId}:
     patch:
       tags:
         - Pick
@@ -176,7 +169,7 @@ paths:
             text/json:
               schema:
                 $ref: "#/components/schemas/ErrorModel"
-  /api/emotions/picklists/images:
+  /picklists/images:
     patch:
       tags:
         - Transport
@@ -239,7 +232,7 @@ paths:
             text/json:
               schema:
                 $ref: "#/components/schemas/ErrorModel"
-  /api/emotions/goodsitems/update-dimensions:
+  /goodsitems/update-dimensions:
     patch:
       tags:
         - Transport
@@ -290,7 +283,7 @@ paths:
             text/json:
               schema:
                 $ref: "#/components/schemas/ErrorModel"
-  /api/emotions/picklists/pack:
+  /picklists/pack:
     post:
       tags:
         - Pack
@@ -545,6 +538,7 @@ components:
         pickLineId:
           type: integer
           format: int32
+          description: "Host primary key"
         articleNumber:
           type: string
           nullable: true
@@ -552,21 +546,25 @@ components:
         articleId:
           type: string
           nullable: true
-          description: "WMS primary key"
-        stockItemDescription:
+          description: "Host primary key"
+        articleDescription:
           type: string
           nullable: true
+          description: "Article description"
         barcodes:
           type: array
           items:
             type: string
           nullable: true
+          description: "Associated barcodes"
         imageUrl:
           type: string
           nullable: true
+          description: "URL to image of article"
         unitWeight:
           type: number
           format: double
+          description: "Weight of one unit in kg"
         articleItems:
           type: array
           items:
@@ -575,18 +573,18 @@ components:
               articleItemId:
                 type: string
                 nullable: true
-                description: "WMS primary key"
+                description: "Host primary key"
               quantityOnHand:
                 type: number
                 format: double
               pickFromLocation:
                 type: string
                 nullable: true
-                description: "WMS Pick from location"
+                description: "Host Pick from location"
               pickFromZone:
                 type: string
                 nullable: true
-                description: "WMS Pick from zone"
+                description: "Host Pick from zone"
               currentLocation:
                 type: string
                 nullable: true
