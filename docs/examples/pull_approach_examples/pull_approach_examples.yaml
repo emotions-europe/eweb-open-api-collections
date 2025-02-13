@@ -1,0 +1,625 @@
+openapi: 3.0.1
+info:
+  title: |
+    Examples and description on how to use a pull based approach for integrating with e-web
+  version: "1.0"
+
+tags:
+  - name: "DWS Sorting"
+    description: |
+      Below explains flow and examples of the expected enpoints that customer should implement to integrate with DWS Sorting system.
+
+      ![Workflow Diagram](./examples/pull_approach_examples/images/sorting.drawio.svg)
+
+  - name: "Pack"
+    description: |
+      Below explains flow and examples of the expected enpoints that customer should implement to integrate with e-motions e-seal pack machine.
+
+      ![Workflow Diagram](./examples/pull_approach_examples/images/pack-eseal.drawio.svg)
+
+      1. Operator start by scanning some reference to get a picklist
+      1.1 Depending on process here but a typical way is that operator once scan the picking cart then just between each order only the order location within the picking cart is scanned.
+      2. e-web displays information on selected order
+      3. Operator put the order into the machine.
+      4. Operator press start to run the pack cycle.
+      5. Package is created and pass label applicator for label print.
+
+paths:
+  /api/emotions/picklists:
+    get:
+      tags:
+        - Pack
+      summary: Returns a picklist by relevant parameters
+      parameters:
+        - name: reference
+          in: query
+          description: "Can for example be a picking cart id or a picking cart location or a box on automation depending on process and intergration"
+          style: form
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/EmotionsPickListResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmotionsPickListResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/EmotionsPickListResponse"
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+  /api/emotions/picklists/{picklistId}/pick-list-status:
+    patch:
+      tags:
+        - Pick
+        - Pack
+      summary: Update pick list status number (Optional)
+      description: |
+        **Optional**
+
+        This can be used to inform WMS that a picklist need to be put aside and error handled.
+      parameters:
+        - name: picklistId
+          in: path
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              type: integer
+          text/json:
+            schema:
+              type: string
+          application/*+json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+  /api/emotions/picklines/{picklineId}:
+    patch:
+      tags:
+        - Pick
+      summary: Picks a specifict pickline
+      parameters:
+        - name: picklineId
+          in: path
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int32
+          text/json:
+            schema:
+              type: integer
+              format: int32
+          application/*+json:
+            schema:
+              type: integer
+              format: int32
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+        "500":
+          description: Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+  /api/emotions/picklists/images:
+    patch:
+      tags:
+        - Transport
+      summary: Uploads an image that is tied to a picklist
+      parameters:
+        - name: picklineId
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: string
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmotionsImageRequest"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/EmotionsImageRequest"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/EmotionsImageRequest"
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+        "500":
+          description: Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+  /api/emotions/goodsitems/update-dimensions:
+    patch:
+      tags:
+        - Transport
+      summary: Updates the dimensions of a goodsitem with a specific boxId
+      parameters:
+        - name: boxId
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: string
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmotionsGoodsItemDimensionPatchModel"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/EmotionsGoodsItemDimensionPatchModel"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/EmotionsGoodsItemDimensionPatchModel"
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+        "500":
+          description: Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+  /api/emotions/picklists/pack:
+    patch:
+      tags:
+        - Pack
+      summary: Packs the order, books the consignment and print carrierlabel for a picklist on specified printer
+      parameters:
+        - name: picklistId
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: string
+        - name: printerNode
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+  /parcel-at-sorting:
+    post:
+      tags:
+        - "DWS Sorting"
+      summary: Save parcel information and get sorting information back
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+                  description: Site physical identifier.
+                barcode:
+                  type: string
+                  description: Chosen barcode on parcel
+                length:
+                  type: number
+                  format: float
+                  description: Length in meter.
+                width:
+                  type: number
+                  format: float
+                  description: Width in meter.
+                height:
+                  type: number
+                  format: float
+                  description: Height in meter.
+                volume:
+                  type: number
+                  format: float
+                  description: Volume in cubic meter.
+                weight:
+                  type: number
+                  format: float
+                  description: Weight in kilogram.
+            examples:
+              ex1:
+                summary: Example 1, parcel with proper barcode
+                value:
+                  location: "Sorting1"
+                  barcode: "1Z2F4E126822306480"
+                  length: 0.6
+                  width: 0.4
+                  height: 0.12
+                  volume: 0.0288
+                  weight: 1
+              ex2:
+                summary: Example 2, parcel with no-read
+                value:
+                  location: "Sorting1"
+                  barcode: "NoRead"
+                  length: 0
+                  width: 0
+                  height: 0
+                  volume: 0
+                  weight: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sortingParameters:
+                    type: object
+                    description: Sorting parameters.
+                  id:
+                    type: string
+                    description: An identifier for parcel that can be commnuicated in "save-image" and "parcel-arrive".
+              examples:
+                ex1:
+                  summary: Example 1
+                  value:
+                    sortingParameters:
+                      contryCode: "SE"
+                      postcode: "64201"
+                      transporter: "Schenker"
+                      transporterService: "Express"
+                    id: "1Z2F4E126822306480"
+        "400":
+          description: ERROR
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              examples:
+                ex1:
+                  summary: Example Error
+                  value:
+                    error:
+                      code: "SortError_12345"
+                      message: "error message"
+
+  /save-image:
+    post:
+      tags:
+        - "DWS Sorting"
+      summary: Save image (Optional)
+      description: |
+        **Optional**
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+                  description: Site physical identifier.
+                id:
+                  type: string
+                  description: An identifier for parcel, recived in "parcel-at-sorting" response.
+                imagePayload:
+                  type: string
+                  format: byte
+                  description: Jpeg image as base64 encoded string
+            examples:
+              ex1:
+                summary: Example 1
+                value:
+                  location: "Sorting1"
+                  id: "1Z2F4E126822306480"
+                  imagePayload: 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
+      responses:
+        "200":
+          description: OK
+
+  /parcel-arrive:
+    post:
+      tags:
+        - "DWS Sorting"
+      summary: Confirm arrival at destination (Optional)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+                  description: Site physical identifier.
+                id:
+                  type: string
+                  description: An identifier for parcel, recived in "parcel-at-sorting" response.
+                laneId:
+                  type: string
+                  description: Lane where parcel just arrived.
+                cageId:
+                  type: string
+                  description: cage identifier.
+            examples:
+              ex1:
+                summary: Example 1
+                value:
+                  location: "Sorting1"
+                  id: "1Z2F4E126822306480"
+                  laneId: "3"
+                  cageId: "Cage12345"
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    EmotionsGoodsItemDimensionPatchModel:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: double
+          description: "In kg"
+        length:
+          type: number
+          format: double
+          description: "In meter"
+        width:
+          type: number
+          format: double
+          description: "In meter"
+        height:
+          type: number
+          format: double
+          description: "In meter"
+      additionalProperties: false
+    EmotionsImageRequest:
+      type: object
+      properties:
+        base64Image:
+          type: string
+          nullable: true
+        fileName:
+          type: string
+          nullable: true
+        imageTypeName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    EmotionsPickLineResponse:
+      type: object
+      properties:
+        pickLineId:
+          type: integer
+          format: int32
+        articleNumber:
+          type: string
+          nullable: true
+          description: "Customer article number"
+        articleId:
+          type: string
+          nullable: true
+          description: "WMS primary key"
+        stockItemDescription:
+          type: string
+          nullable: true
+        barcodes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        unitWeight:
+          type: number
+          format: double
+        articleItems:
+          type: array
+          items:
+            type: object
+            properties:
+              articleItemId:
+                type: string
+                nullable: true
+                description: "WMS primary key"
+              quantityOnHand:
+                type: number
+                format: double
+              pickFromLocation:
+                type: string
+                nullable: true
+                description: "WMS Pick from location"
+              pickFromZone:
+                type: string
+                nullable: true
+                description: "WMS Pick from zone"
+              currentLocation:
+                type: string
+                nullable: true
+                description: "Current location"
+      additionalProperties: false
+    EmotionsPickListResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          pickListId:
+            type: integer
+            format: int32
+          orderStatus:
+            type: integer
+            format: string
+          pickLines:
+            type: array
+            items:
+              $ref: "#/components/schemas/EmotionsPickLineResponse"
+            nullable: true
+      additionalProperties: false
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: true
+        code:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ErrorModel:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: true
+        code:
+          type: integer
+          format: int32
+      additionalProperties: false
