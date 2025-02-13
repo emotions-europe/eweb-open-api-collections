@@ -1,0 +1,592 @@
+openapi: 3.0.1
+info:
+  title: Pick, pack and sort
+  version: '1.0'
+paths:
+  /api/emotions/picklists:
+    get:
+      tags:
+        - Pick and pack
+      summary: Returns a picklist by relevant parameters
+      parameters:
+        - name: boxId
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: string
+        - name: pickListStatusFrom
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: string
+        - name: pickListStatusTo
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: string
+        - name: pickListTypes
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: packageTypes
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: includedZones
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/EmotionsPickListResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmotionsPickListResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/EmotionsPickListResponse'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/emotions/picklists/{picklistId}/pick-list-status:
+    patch:
+      tags:
+        - Pick and pack
+      summary: Update pick list status number
+      parameters:
+        - name: picklistId
+          in: path
+          description: ''
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: integer
+          text/json:
+            schema:
+              type: string
+          application/*+json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/emotions/picklines/{picklineId}:
+    patch:
+      tags:
+        - Pick and pack
+      summary: Picks a specifict pickline
+      parameters:
+        - name: picklineId
+          in: path
+          description: ''
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int32
+          text/json:
+            schema:
+              type: integer
+              format: int32
+          application/*+json:
+            schema:
+              type: integer
+              format: int32
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '500':
+          description: Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/emotions/picklists/images:
+    patch:
+      tags:
+        - Pick and pack
+      summary: Uploads an image to a picklist
+      parameters:
+        - name: boxId
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: string
+        - name: goodsItemNumber
+          in: query
+          style: form
+          schema:
+            type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmotionsImageRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/EmotionsImageRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/EmotionsImageRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '500':
+          description: Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/emotions/goodsitems/update-dimensions:
+    patch:
+      tags:
+        - Pick and pack
+      summary: Updates the dimensions of a goodsitem with a specific boxId
+      parameters:
+        - name: boxId
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmotionsGoodsItemDimensionPatchModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/EmotionsGoodsItemDimensionPatchModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/EmotionsGoodsItemDimensionPatchModel'
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '500':
+          description: Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /api/emotions/picklists/pack:
+    patch:
+      tags:
+        - Pick and pack
+      summary: Packs the order, books the consignment and print carrierlabel for a box
+      parameters:
+        - name: boxId
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: string
+        - name: printerNode
+          in: query
+          description: ''
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /parcel-at-sorting:
+    post:
+      tags:
+        - "Sorting"
+      summary: Save parcel information and get sorting information back
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+                  description: Site physical identifier.
+                barcode:
+                  type: string
+                  description: Chosen barcode on parcel
+                length:
+                  type: number
+                  format: float
+                  description: Length in meter.
+                width:
+                  type: number
+                  format: float
+                  description: Width in meter.
+                height:
+                  type: number
+                  format: float
+                  description: Height in meter.
+                volume:
+                  type: number
+                  format: float
+                  description: Volume in cubic meter.
+                weight:
+                  type: number
+                  format: float
+                  description: Weight in kilogram.
+            examples:
+              ex1:
+                summary: Example 1, parcel with proper barcode
+                value:
+                  location: "Sorting1"
+                  barcode: "1Z2F4E126822306480"
+                  length: 0.6
+                  width: 0.4
+                  height: 0.12
+                  volume: 0.0288
+                  weight: 1
+              ex2:
+                summary: Example 2, parcel with no-read
+                value:
+                  location: "Sorting1"
+                  barcode: "NoRead"
+                  length: 0
+                  width: 0
+                  height: 0
+                  volume: 0
+                  weight: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sortingParameters:
+                    type: object
+                    description: Sorting parameters.
+                  id:
+                    type: string
+                    description: An identifier for parcel that can be commnuicated in "save-image" and "parcel-arrive".
+              examples:
+                ex1:
+                  summary: Example 1
+                  value:
+                    sortingParameters:
+                      contryCode: "SE"
+                      postcode: "64201"
+                      transporter: "Schenker"
+                      transporterService: "Express"
+                    id: "1Z2F4E126822306480"
+        "400":
+          description: ERROR
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              examples:
+                ex1:
+                  summary: Example Error
+                  value:
+                    error:
+                      code: "SortError_12345"
+                      message: "error message"
+
+  /parcel-arrive:
+    post:
+      tags:
+        - "Sorting"
+      summary: Confirm arrival at destination
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+                  description: Site physical identifier.
+                id:
+                  type: string
+                  description: An identifier for parcel, recived in "parcel-at-sorting" response.
+                laneId:
+                  type: string
+                  description: Lane where parcel just arrived.
+                cageId:
+                  type: string
+                  description: cage identifier.
+            examples:
+              ex1:
+                summary: Example 1
+                value:
+                  location: "Sorting1"
+                  id: "1Z2F4E126822306480"
+                  laneId: "3"
+                  cageId: "Cage12345"
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    EmotionsGoodsItemDimensionPatchModel:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: double
+          description: "In kg"
+        length:
+          type: number
+          format: double
+          description: "In meter"
+        width:
+          type: number
+          format: double
+          description: "In meter"
+        height:
+          type: number
+          format: double
+          description: "In meter"
+      additionalProperties: false
+    EmotionsImageRequest:
+      type: object
+      properties:
+        base64Image:
+          type: string
+          nullable: true
+        fileName:
+          type: string
+          nullable: true
+        imageTypeName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    EmotionsPickLineResponse:
+      type: object
+      properties:
+        pickLineId:
+          type: integer
+          format: int32
+        stockItemNumber:
+          type: string
+          nullable: true
+        stockItemDescription:
+          type: string
+          nullable: true
+        warehouseZone:
+          type: string
+          nullable: true
+        warehouseLocationNumber:
+          type: string
+          nullable: true
+        place:
+          type: string
+          nullable: true
+        barCodes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        pickQuantity:
+          type: number
+          format: double
+        quantityPicked:
+          type: number
+          format: double
+        unitWeight:
+          type: number
+          format: double
+      additionalProperties: false
+    EmotionsPickListResponse:
+      type: object
+      properties:
+        pickListId:
+          type: integer
+          format: int32
+        orderStatusNumber:
+          type: integer
+          format: int32
+        boxType:
+          type: string
+          nullable: true
+        pickLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmotionsPickLineResponse'
+          nullable: true
+      additionalProperties: false
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: true
+        code:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ErrorModel:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: true
+        code:
+          type: integer
+          format: int32
+      additionalProperties: false
+
