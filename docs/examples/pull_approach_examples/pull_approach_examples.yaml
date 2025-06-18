@@ -22,6 +22,7 @@ paths:
     get:
       tags:
         - Pack
+        - Pick
       summary: Returns a picklist by relevant parameters
       parameters:
         - name: reference
@@ -79,6 +80,51 @@ paths:
             text/json:
               schema:
                 $ref: "#/components/schemas/EmotionsPickListResponse"
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+  /picklists/{picklistId}/assign-box:
+    patch:
+      tags:
+        - Pick
+        - Pack
+      summary: Assign a box to a picklist
+      description: |
+        This can be used to assign a box to a picklist.
+        If the box is already assigned to a picklist, this will update the box assignment.
+      parameters:
+        - name: boxId
+          in: path
+          description: ""
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              type: integer
+          text/json:
+            schema:
+              type: string
+          application/*+json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Success
         "404":
           description: Not Found
           content:
