@@ -654,6 +654,10 @@ components:
                 type: string
                 nullable: true
                 description: "Host primary key"
+              hardwareLocationReference:
+                type: string
+                format: double
+                description: "A reference key to the location in emotions system"
               quantityPicked:
                 type: number
                 format: double
