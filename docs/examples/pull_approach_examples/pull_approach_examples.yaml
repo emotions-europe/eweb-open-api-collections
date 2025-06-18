@@ -30,6 +30,42 @@ paths:
           style: form
           schema:
             type: string
+        - name: pickListStatusFrom
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: string
+        - name: pickListStatusTo
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: string
+        - name: pickListTypes
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: packageTypes
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: includedZones
+          in: query
+          description: ""
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         "200":
           description: Success
@@ -60,10 +96,8 @@ paths:
       tags:
         - Pick
         - Pack
-      summary: Update pick list status number (Optional)
+      summary: Update pick list status number
       description: |
-        **Optional**
-
         This can be used to inform Host that a picklist need to be put aside and error handled.
       parameters:
         - name: picklistId
@@ -589,6 +623,11 @@ components:
                 type: string
                 nullable: true
                 description: "Current location"
+              pickSequence:
+                type: number
+                format: integer
+                nullable: true
+                description: "If pick sequence is used, this is the sequence number"
       additionalProperties: false
     EmotionsPickListResponse:
       type: array
