@@ -654,7 +654,10 @@ components:
                 type: string
                 nullable: true
                 description: "Host primary key"
-              quantityOnHand:
+              quantityPicked:
+                type: number
+                format: double
+              quantityToPick:
                 type: number
                 format: double
               pickFromLocation:
